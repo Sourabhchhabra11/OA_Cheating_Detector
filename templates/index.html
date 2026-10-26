@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OA Monitor | AI Proctoring</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">O</div>
+            <div>
+                <h2>OA Monitor</h2>
+                <p>AI PROCTORING SYSTEM</p>
+            </div>
+        </div>
+
+        <div class="nav-label">WORKSPACE</div>
+        <a class="nav-item active" href="#overview"><span>▦</span> Overview</a>
+        <a class="nav-item" href="#monitor"><span>◉</span> Live Monitoring</a>
+        <a class="nav-item" href="#events"><span>⚑</span> Suspicious Events</a>
+        <a class="nav-item" href="#analytics"><span>▥</span> Analytics</a>
+
+        <div class="sidebar-bottom">
+            <div class="system-status">
+                <span class="status-dot"></span>
+                <div>
+                    <strong>System Interface</strong>
+                    <p>Frontend preview</p>
+                </div>
+            </div>
+            <p class="version">OA Monitor · Version 1.0</p>
+        </div>
+    </aside>
+
+    <main class="main-content" id="overview">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">EXAMINATION CONTROL CENTER</p>
+                <h1>Monitoring Dashboard</h1>
+                <p class="subtitle">Monitor examination sessions and review detected behavior.</p>
+            </div>
+            <div class="topbar-right">
+                <div class="live-badge"><span></span> SYSTEM READY</div>
+                <div class="avatar">AI</div>
+            </div>
+        </header>
+
+        <section class="session-bar">
+            <div>
+                <span class="session-label">CURRENT SESSION</span>
+                <h3>Online Examination</h3>
+                <p id="session-status">Waiting to start monitoring</p>
+            </div>
+            <div class="session-actions">
+                <button class="btn btn-secondary" id="reset-btn">Reset Session</button>
+                <button class="btn btn-primary" id="start-btn">▶ Start Monitoring</button>
+            </div>
+        </section>
+
+        <section class="stats-grid">
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Suspicion Score</span>
+                    <span class="stat-icon purple">◈</span>
+                </div>
+                <h2 id="score-value">0</h2>
+                <p class="stat-note">Session risk indicator</p>
+                <div class="progress-track">
+                    <div id="score-progress" class="progress-fill"></div>
+                </div>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Suspicious Events</span>
+                    <span class="stat-icon orange">⚑</span>
+                </div>
+                <h2 id="event-total">0</h2>
+                <p class="stat-note">Events recorded this session</p>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Faces Detected</span>
+                    <span class="stat-icon blue">◎</span>
+                </div>
+                <h2 id="face-count">—</h2>
+                <p class="stat-note">Awaiting camera connection</p>
+            </article>
+
+            <article class="stat-card">
+                <div class="stat-top">
+                    <span>Session Duration</span>
+                    <span class="stat-icon green">◷</span>
+                </div>
+                <h2 id="duration">00:00</h2>
+                <p class="stat-note">Time since monitoring started</p>
+            </article>
+        </section>
+
+        <section class="content-grid" id="monitor">
+            <article class="panel camera-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Live Examination Feed</h3>
+                        <p>Camera preview and detection overlay</p>
+                    </div>
+                    <span class="tag" id="camera-status">CAMERA OFF</span>
+                </div>
+
+                <div class="camera-screen" id="camera-screen">
+                    <div class="camera-placeholder" id="camera-placeholder">
+                        <div class="camera-symbol">◉</div>
+                        <h3>Camera feed not connected</h3>
+                        <p>Start monitoring after connecting the Python detection backend.</p>
+                    </div>
+                    <img id="camera-feed" alt="Live examination camera feed" hidden>
+                    <div class="camera-overlay">
+                        <span>OA MONITOR</span>
+                        <span id="camera-clock">--:--:--</span>
+                    </div>
+                </div>
+
+                <div class="camera-footer">
+                    <div class="feed-indicator"><span></span><span id="feed-label">Waiting for camera</span></div>
+                    <span id="gaze-label">Gaze: —</span>
+                    <span id="head-label">Head pose: —</span>
+                </div>
+            </article>
+
+            <article class="panel behavior-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Behavior Analysis</h3>
+                        <p>Current detection indicators</p>
+                    </div>
+                    <span class="neutral-tag">LIVE STATUS</span>
+                </div>
+
+                <div class="behavior-list">
+                    <div class="behavior-row">
+                        <div class="behavior-icon">↔</div>
+                        <div class="behavior-info">
+                            <strong>Looking Away</strong>
+                            <p>Gaze and head movement</p>
+                        </div>
+                        <span class="behavior-state" id="gaze-state">INACTIVE</span>
+                    </div>
+                    <div class="behavior-row">
+                        <div class="behavior-icon">▣</div>
+                        <div class="behavior-info">
+                            <strong>Phone Detection</strong>
+                            <p>Phone detector status</p>
+                        </div>
+                        <span class="behavior-state" id="phone-state">INACTIVE</span>
+                    </div>
+                    <div class="behavior-row">
+                        <div class="behavior-icon">♧</div>
+                        <div class="behavior-info">
+                            <strong>Multiple Faces</strong>
+                            <p>Additional face detection</p>
+                        </div>
+                        <span class="behavior-state" id="faces-state">INACTIVE</span>
+                    </div>
+                </div>
+
+                <div class="risk-box">
+                    <span class="risk-label">SESSION ASSESSMENT</span>
+                    <h2 id="risk-status">NOT STARTED</h2>
+                    <p id="risk-description">Start the monitoring system to receive session data.</p>
+                </div>
+            </article>
+        </section>
+
+        <section class="content-grid lower-grid" id="analytics">
+            <article class="panel chart-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Suspicion Score Timeline</h3>
+                        <p>Score progression throughout the session</p>
+                    </div>
+                    <span class="neutral-tag">SESSION HISTORY</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="score-chart"></canvas>
+                </div>
+            </article>
+
+            <article class="panel chart-panel">
+                <div class="panel-heading">
+                    <div>
+                        <h3>Event Distribution</h3>
+                        <p>Recorded behavior categories</p>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="event-chart"></canvas>
+                </div>
+            </article>
+        </section>
+
+        <section class="panel events-panel" id="events">
+            <div class="panel-heading">
+                <div>
+                    <h3>Recent Suspicious Events</h3>
+                    <p>Events reported by the monitoring system</p>
+                </div>
+                <span class="neutral-tag" id="event-count-label">0 EVENTS</span>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>TIME</th>
+                            <th>EVENT TYPE</th>
+                            <th>DESCRIPTION</th>
+                            <th>SCORE</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody id="event-table">
+                        <tr>
+                            <td colspan="5" class="empty-row">No events received. Connect the Python backend to display actual detections.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="report-actions">
+                <span id="report-message">Session reports will be available after backend integration.</span>
+                <button class="btn btn-secondary" id="export-btn">Export Events CSV</button>
+            </div>
+        </section>
+
+        <footer class="page-footer">
+            <span>OA Monitor · AI-assisted examination monitoring</span>
+            <span>Detection results require backend connection</span>
+        </footer>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

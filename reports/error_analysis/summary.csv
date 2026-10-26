@@ -1,0 +1,4 @@
+behavior,accuracy,false_negatives,false_positives,true_positives,true_negatives
+looking_away,0.6589036187746328,306,646,335,1504
+phone,0.6391974202794697,643,364,593,1191
+multiple_faces,0.7864564672160516,156,440,526,1669
